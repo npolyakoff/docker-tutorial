@@ -9,7 +9,7 @@ const app = express();
 const startServer = () => {
     app.listen(port, () => {
         console.log(`Api server started on port ${port}`)
-        console.log (`Host is ${host}`)
+        console.log (`Host is: ${host}`)
         console.log(`Database connection: ${db}`)
 
         // Post.find(function (err, posts) {
