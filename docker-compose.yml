@@ -1,22 +1,55 @@
 version: '3'
 
 services: 
-    api:
-        build: ./api
-        command: npm run start
+    frontend:
+        build: ./frontend
+        container_name: DOCKER-TUTORIAL-FRONTEND
+        command: yarn start
         restart: unless-stopped
         ports: 
             - "3000:3000"
+        stdin_open: true
+        tty: true
+        volumes: 
+            - ./frontend/src:/usr/src/app/src
+
+    api:
+        build: ./api
+        container_name: DOCKER-TUTORIAL-API
+        command: npm run start
+        restart: unless-stopped
+        ports: 
+            - "3001:3001"
         environment: 
-            - PORT=3000
-            - HOST=npolyakoff.com
+            - PORT=3001
+            - HOST=http://npolyakoff.com
             - MONGO_URL=mongodb://api_db:27017/api
         depends_on: 
             - api_db
+    auth:
+        build: ./auth
+        container_name: DOCKER-TUTORIAL-AUTH
+        command: npm run start
+        restart: unless-stopped
+        ports: 
+            - "3002:3002"
+        environment: 
+            - PORT=3002
+            - HOST=http://npolyakoff.com
+            - MONGO_URL=mongodb://auth_db:27017/auth
+        depends_on: 
+            - auth_db
     api_db:
+        container_name: DOCKER-TUTORIAL-API_DB
         image: mongo:latest
         volumes: 
             - mongodb_api:/data/db
-
+    auth_db:
+        container_name: DOCKER-TUTORIAL-AUTH_DB
+        image: mongo:latest
+        volumes: 
+            - mongodb_auth:/data/db
+        
 volumes: 
     mongodb_api:
+    mongodb_auth:
