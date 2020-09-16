@@ -4,14 +4,14 @@ services:
     frontend:
         build: ./frontend
         container_name: DOCKER-TUTORIAL-FRONTEND
-        command: yarn start
+        command: serve -s build -l 3000
         restart: unless-stopped
         ports: 
             - "3000:3000"
-        stdin_open: true
-        tty: true
-        volumes: 
-            - ./frontend/src:/usr/src/app/src
+        # stdin_open: true
+        # tty: true
+        # volumes: 
+        #     - ./frontend/src:/usr/src/app/src
 
     api:
         build: ./api
