@@ -1,6 +1,9 @@
 const express = require('express');
 const { connectDb } = require('./helpers/db');
-const { port, host, db } = require('./configuration');
+const { port, host, db, apiUrl } = require('./configuration');
+const axios = require('axios');
+const { response } = require('express');
+
 
 const app = express();
 
@@ -13,11 +16,28 @@ const startServer = () => {
     })
 }
 
-app.get('/test', (req, res) => {
-    res.send('Auth service works fine!')
+app.get('/welcome', (req, res) => {
+    res.send('Welcome on Auth service!')
 })
+
+app.get('/api/authUser', (req, res) => {
+    res.json({
+        id: '123',
+        email: 'foo@mail.com'
+    })
+})
+
+app.get('/test-apiData', (req, res) => {
+    axios.get(`${apiUrl}/apiData`)
+    .then(response => {
+        res.json({
+            testApi: response.data,
+        })
+    })
+})
+
 app.get('*', (req, res) => {
-    res.send(`Hello on port ${port}`)
+    res.send(`It is Auth service. Hello on port ${port}`)
 })
 
 connectDb()

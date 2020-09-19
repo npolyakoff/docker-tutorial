@@ -1,7 +1,8 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const { connectDb } = require('./helpers/db');
-const { port, host, db } = require('./configuration');
+const { port, host, db, authApiUrl } = require('./configuration');
+const axios = require('axios');
 
 const app = express();
 
@@ -31,11 +32,28 @@ const postSchema = new mongoose.Schema({
 
 const Post = mongoose.model('Post', postSchema) 
 
-app.get('/test', (req, res) => {
-    res.send('Api server works fine!')
+app.get('/welcome', (req, res) => {
+    res.send('Welcome on Api service!')
 })
+
+app.get('/test-authUser', (req, res) => {
+    axios.get(`${authApiUrl}/authUser`)
+    .then(response => {
+        res.json({
+            userFromAuth: response.data
+        })
+        res.send(response)
+    })
+})
+
+app.get('/api/apiData', (req, res) => {
+    res.json({
+        testApi: true,
+    })
+})
+
 app.get('*', (req, res) => {
-    res.send(`Hello on port ${port}`)
+    res.send(`It is Api service. Hello on port ${port}`)
 })
 
 connectDb()
