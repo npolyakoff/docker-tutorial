@@ -1,10 +1,14 @@
 server {
     listen 80;
     
-    server_name docker-tutorial.com;
+    server_name dev.docker-tutorial.com;
 
     location / {
         proxy_pass http://frontend:3000;
+        # Need for sockets
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
     }
 
     location /api {
